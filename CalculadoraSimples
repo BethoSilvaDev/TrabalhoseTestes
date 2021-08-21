@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Document</title>
+  <style>
+    * {
+      margin: 0px;
+      padding: 0px;
+      box-sizing: border-box;
+    }
+
+    .conteudo {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background-color: rgba(190, 188, 188, 0.945);
+    }
+
+    .base {
+      position: relative;
+      width: 30%;
+      height: 440px;
+      border: 1px solid rgba(0, 0, 0, 0);
+      margin: auto;
+      top: 100px;
+      border-radius: 10%;
+      box-shadow: 2px 2px 20px;
+      background-color: rgba(0, 0, 0, 0.795);
+    }
+
+
+    .teclado {
+      position: relative;
+      width: 95%;
+      height: auto;
+      margin: auto;
+      outline: 1px solid rgba(0, 0, 0, 0.699);
+      top: 70px;
+    }
+
+    .teclado table {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .teclado table,
+    td,
+    tr {
+      border: 1px solid rgba(0, 0, 0, 0.336);
+    }
+
+    .teclado table button {
+      width: 100%;
+      height: 100%;
+      font-size: 25px;
+    }
+
+    .tela {
+      position: relative;
+      width: 95%;
+      height: 60px;
+      margin: auto;
+      top: 40px;
+      background-color: rgb(28, 161, 170);
+    }
+
+    .tela p {
+      position: relative;
+      width: 100%;
+      height: 65px;
+      float: right;
+      top: 10%;
+      text-align: right;
+      font-size: 30px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: rgb(17, 17, 17);
+    }
+
+    .num:hover,
+    .sim:hover {
+      background-color: rgb(233, 64, 64);
+      cursor: pointer;
+    }
+
+    @media (max-width: 570px) {
+      .base {
+        width: 100%;
+        top: 10px;
+        height: 100vh;
+        border-radius: 0;
+      }
+
+      .teclado {
+        top: 95px;
+        height: 50vh;
+      }
+
+      .tela {
+        top: 70px;
+        height: 150px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="conteudo">
+    <div class="base">
+      <div class="tela">
+        <p></p>
+      </div>
+      <div class="teclado">
+        <table>
+          <tr>
+            <td><button class="num" value="-">-M</button></td>
+            <td><button class="num" value="+">+M</button></td>
+            <td><button class="num" value="%">%</button></td>
+            <td colspan="2"><button class="sim num" value="C">C</button></td>
+          </tr>
+          <tr>
+            <td><button class="num" value="7">7</button></td>
+            <td><button class="num" value="8">8</button></td>
+            <td><button class="num" value="9">9</button></td>
+            <td colspan="2"><button class="sim num" value="*">*</button></td>
+          </tr>
+          <tr>
+            <td><button class="num" value="4">4</button></td>
+            <td><button class="num" value="5">5</button></td>
+            <td><button class="num" value="6">6</button></td>
+            <td colspan="2"><button class="sim num" value="/">/</button></td>
+          </tr>
+          <tr>
+            <td><button class="num" value="1">1</button></td>
+            <td><button class="num" value="2">2</button></td>
+            <td><button class="num" value="3">3</button></td>
+            <td colspan="2"><button class="sim num" value="-">-</button></td>
+          </tr>
+          <tr>
+            <td><button class="num" value=".">.</button></td>
+            <td><button class="num" value="0">0</button></td>
+            <td><button class="sim num" value="=">=</button></td>
+            <td colspan="2"><button class="sim num" value="+">+</button></td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script>
+
+
+    var num = document.querySelectorAll('.num');
+    var sim = document.getElementsByClassName('sim');
+    var tela = document.querySelector('.tela p');
+    var x = '';
+    var termo1 = '';
+    var termo2 = '';
+    var sinal = '';
+    var sinP = '';
+    var res = '';
+    var lista = [];
+    digito();
+
+    function digito() {
+
+      for (let i = 0; i <= num.length; i++) {
+        num[i].addEventListener('click', function () {
+          if (x == '' && sinal == '' && this.value == '-') {
+            x += this.value;
+            tela.innerHTML = x;
+          }
+          else {
+            x += this.value;
+            console.log(x);
+            tela.innerHTML = x;
+            if (this.value == '+' ||
+              this.value == '-' ||
+              this.value == '*' ||
+              this.value == '/' ||
+              this.value == '=' ||
+              this.value == '%') {
+              if (termo1 == '') {
+                termo1 = x.substring(0, x.length - 1);
+                tela.innerHTML = termo1;
+                console.log(termo1 + ' termo1 normal')
+                x = '';
+                sinal = this.value;
+                sinP = sinal;
+              }
+              else {
+                if (this.value == '%') {
+                  termo2 = x.substring(0, x.length - 1);
+                  termo2 = termo2 / 100 * termo1;
+                  termo2 = termo2.toString();
+                  res = operacao(termo1, termo2, sinP);
+                  termo1 = res;
+                  termo2 = '';
+                  x = '';
+                  console.log(res + 'porcent' + termo1);
+                  tela.innerHTML = res;
+                }
+                else {
+                  termo2 = x.substring(0, x.length - 1);
+                  tela.innerHTML = termo2;
+                  console.log(termo2 + 'termo2 normal');
+                  x = '';
+                  res = operacao(termo1, termo2, sinal);
+                  termo1 = res;
+                  termo2 = '';
+                  sinal = this.value;
+                  console.log(res);
+                  tela.innerHTML = res;
+                }
+
+
+              }
+
+
+            }
+            if (this.value == 'C') {
+              termo1 = '';
+              termo2 = '';
+              res = '';
+              sinal = '';
+              tela.innerHTML = 0;
+              x = '';
+            }
+          }
+
+        })
+      }
+    }
+
+    function operacao(x, y, s) {
+      x = parseFloat(x); y = parseFloat(y);
+      if (s == '+') {
+        return (x + y);
+      }
+      if (s == '-') {
+        return (x - y);
+      }
+      if (s == '*') {
+        return (x * y);
+      }
+      if (s == '/') {
+        return (x / y);
+      }
+      if (s == '=') {
+        x = x; y = 0;
+        return (x + y);
+      }
+      if (s == '%') {
+        x = x * (y / 100);
+        return x;
+      }
+    }
+</script>
+
+</body>
+
+</html>
